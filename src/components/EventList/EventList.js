@@ -3,12 +3,29 @@ import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as eventActions from '../../actions/eventActions';
-import { FlatList, Text } from 'react-native';
+import { FlatList, Text, StyleSheet } from 'react-native';
+import EventCard from './EventCard';
+
+const styles = StyleSheet.create({
+    list: {
+      flex: 1
+    }
+  })
 
 class EventList extends Component {
 
     constructor(props, context) {
         super(props, context);
+
+        setInterval(() => {
+            var { events } = props;
+
+            events.map( e => ({
+                ...e, 
+                timer: Date.now()
+            }));
+            props.actions.startCountdown(events);
+        }, 1000);
     }
 
     render() {
@@ -17,7 +34,7 @@ class EventList extends Component {
         return (
             <FlatList 
                 data={events} 
-                renderItem={({item}) => <Text>{item.title}</Text>}
+                renderItem={({item}) => <EventCard event={item}/>}
                 keyExtractor= {item => item.id}
             />
         );
@@ -34,4 +51,10 @@ function mapStateToProps(state, ownProps) {
     };
 }
 
-export default connect(mapStateToProps)(EventList);
+function mapDispatchToProps(dispatch){
+    return {
+        actions: bindActionCreators(eventActions, dispatch)
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(EventList);
