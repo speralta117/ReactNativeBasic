@@ -4,14 +4,10 @@ import { View, SafeAreaView, StyleSheet } from 'react-native';
 import configureStore from './store/configureStore';
 import { Provider } from 'react-redux';
 import { loadEvents } from './actions/eventActions';
-import EventList from './components/EventList/EventList';
+import AppContainer from './components/Navigator/Navigator';
 
 
 const store = configureStore();
-// const events = require('../data/db.json').events.map(e => ({
-//   ...e,
-//   date: new Date(e.date)
-// }));
 store.dispatch(loadEvents());
 
 const styles = StyleSheet.create({
@@ -26,8 +22,8 @@ class App extends Component {
       return (
         <Provider store={store}>
           <SafeAreaView style={styles.safeArea}>
-            <View>
-              <EventList />
+            <View style={{flex: 1}}>
+              <AppContainer />
             </View>
           </SafeAreaView>          
         </Provider>
